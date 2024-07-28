@@ -20,7 +20,7 @@ const SignIn = (): JSX.Element => {
 
   const submit = async (): Promise<void> => {
     if (!form.email || !form.password) {
-      Alert.alert('Error', 'Please fill in all fields')
+      return Alert.alert('Error', 'Please fill in all fields')
     }
 
     setIsSubmitting(true)

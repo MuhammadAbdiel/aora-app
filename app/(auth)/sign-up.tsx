@@ -21,12 +21,12 @@ const SignUp = (): JSX.Element => {
 
   const submit = async (): Promise<void> => {
     if (!form.username || !form.email || !form.password) {
-      Alert.alert('Error', 'Please fill in all fields')
+      return Alert.alert('Error', 'Please fill in all fields')
     }
 
     setSubmitting(true)
     try {
-      const result = await createUser(form.email, form.password, form.username)
+      const result = await createUser(form.username, form.email, form.password)
       setUser(result)
       setIsLogged(true)
 

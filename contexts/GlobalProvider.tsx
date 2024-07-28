@@ -7,9 +7,8 @@ import React, {
   useState,
   PropsWithChildren,
 } from 'react'
+import { Alert } from 'react-native'
 import { Models } from 'react-native-appwrite'
-
-// import { getCurrentUser } from "../lib/appwrite";
 
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined)
 
@@ -38,7 +37,7 @@ const GlobalProvider: React.FC<PropsWithChildren<object>> = ({ children }) => {
         }
       })
       .catch((error) => {
-        console.log(error)
+        Alert.alert('Error:', error)
       })
       .finally(() => {
         setLoading(false)

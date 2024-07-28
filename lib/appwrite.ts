@@ -6,6 +6,7 @@ import {
   Client,
   Databases,
   ID,
+  Models,
   Query,
 } from 'react-native-appwrite'
 
@@ -34,7 +35,7 @@ export const createUser = async (
   username: string,
   email: string,
   password: string,
-) => {
+): Promise<Models.Document> => {
   try {
     const newAccount = await account.create(
       ID.unique(),
@@ -57,7 +58,7 @@ export const createUser = async (
         accountId: newAccount.$id,
         username,
         email,
-        avatarUrl,
+        avatar: avatarUrl,
       },
     )
 
@@ -67,7 +68,10 @@ export const createUser = async (
   }
 }
 
-export const signIn = async (email: string, password: string) => {
+export const signIn = async (
+  email: string,
+  password: string,
+): Promise<Models.Session> => {
   try {
     const session = await account.createEmailPasswordSession(email, password)
 
@@ -77,7 +81,9 @@ export const signIn = async (email: string, password: string) => {
   }
 }
 
-export const getAccount = async () => {
+export const getAccount = async (): Promise<
+  Models.User<Models.Preferences>
+> => {
   try {
     const currentAccount = await account.get()
 
@@ -87,7 +93,7 @@ export const getAccount = async () => {
   }
 }
 
-export const getCurrentUser = async () => {
+export const getCurrentUser = async (): Promise<Models.Document | null> => {
   try {
     const currentAccount = await getAccount()
     if (!currentAccount) throw Error
@@ -106,11 +112,56 @@ export const getCurrentUser = async () => {
   }
 }
 
-export const signOut = async () => {
+export const signOut = async (): Promise<object> => {
   try {
     const session = await account.deleteSession('current')
 
     return session
+  } catch (error: any) {
+    throw new Error(error)
+  }
+}
+
+export const getAllPosts = async (): Promise<Models.Document[]> => {
+  try {
+    const posts = await databases.listDocuments(
+      config.databaseId,
+      config.videoCollectionId,
+    )
+
+    return posts.documents
+  } catch (error: any) {
+    throw new Error(error)
+  }
+}
+
+export const searchPosts = async (
+  query: string | string[] | undefined,
+): Promise<Models.Document[]> => {
+  try {
+    const posts = await databases.listDocuments(
+      config.databaseId,
+      config.videoCollectionId,
+      [Query.search('title', query as string)],
+    )
+
+    if (!posts) throw new Error('Something went wrong')
+
+    return posts.documents
+  } catch (error: any) {
+    throw new Error(error)
+  }
+}
+
+export const getLatestPosts = async (): Promise<Models.Document[]> => {
+  try {
+    const posts = await databases.listDocuments(
+      config.databaseId,
+      config.videoCollectionId,
+      [Query.orderDesc('$createdAt'), Query.limit(7)],
+    )
+
+    return posts.documents
   } catch (error: any) {
     throw new Error(error)
   }

@@ -2,11 +2,10 @@ import { StatusBar } from 'expo-status-bar'
 import { Redirect, Tabs } from 'expo-router'
 import { Image, Text, View } from 'react-native'
 import React from 'react'
-
 import { icons } from '../../constants'
-// import { Loader } from "../../components";
 import { useGlobalContext } from '../../contexts/GlobalProvider'
 import { TabIconProps } from '@/types'
+import Loader from '@/components/Loader'
 
 const TabIcon: React.FC<TabIconProps> = ({
   icon,
@@ -115,7 +114,7 @@ const TabLayout: React.FC = (): JSX.Element => {
         />
       </Tabs>
 
-      {/* <Loader isLoading={loading} /> */}
+      <Loader isLoading={loading} />
       <StatusBar backgroundColor='#161622' style='light' />
     </>
   )

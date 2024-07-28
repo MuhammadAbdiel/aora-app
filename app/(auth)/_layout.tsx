@@ -1,9 +1,8 @@
 import { Redirect, Stack } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import React from 'react'
-
-// import { Loader } from "../../components";
 import { useGlobalContext } from '../../contexts/GlobalProvider'
+import Loader from '@/components/Loader'
 
 const AuthLayout = (): JSX.Element => {
   const { loading, isLogged } = useGlobalContext()
@@ -27,7 +26,7 @@ const AuthLayout = (): JSX.Element => {
         />
       </Stack>
 
-      {/* <Loader isLoading={loading} /> */}
+      <Loader isLoading={loading} />
       <StatusBar backgroundColor='#161622' style='light' />
     </>
   )

@@ -53,3 +53,25 @@ export type AppWriteConfigType = {
   videoCollectionId: string
   storageId: string
 }
+
+export type EmptyStatePropsType = {
+  title: string
+  subtitle: string
+}
+
+export type TrendingPropsType = {
+  posts: Models.Document[]
+}
+
+export type TrendingItemPropsType = {
+  activeItem: Models.Document | string
+  item: Models.Document
+}
+
+export type VideoCardPropsType = {
+  title: string
+  creator: string
+  avatar: string
+  thumbnail: string
+  video: string
+}
