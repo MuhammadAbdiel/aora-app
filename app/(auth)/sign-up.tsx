@@ -10,7 +10,7 @@ import { SignUpFormType } from '@/types'
 import { createUser } from '@/lib/appwrite'
 import { useGlobalContext } from '@/contexts/GlobalProvider'
 
-const SignUp = (): JSX.Element => {
+const SignUp: React.FC = (): JSX.Element => {
   const { setUser, setIsLogged } = useGlobalContext()
   const [isSubmitting, setSubmitting] = useState<boolean>(false)
   const [form, setForm] = useState<SignUpFormType>({

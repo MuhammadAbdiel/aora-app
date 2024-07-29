@@ -10,7 +10,7 @@ import { SignInFormType } from '@/types'
 import { getCurrentUser, signIn } from '@/lib/appwrite'
 import { useGlobalContext } from '@/contexts/GlobalProvider'
 
-const SignIn = (): JSX.Element => {
+const SignIn: React.FC = (): JSX.Element => {
   const { setUser, setIsLogged } = useGlobalContext()
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
   const [form, setForm] = useState<SignInFormType>({

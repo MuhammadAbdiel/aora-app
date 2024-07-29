@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { View, Text, FlatList, Image, RefreshControl } from 'react-native'
 import React, { useState } from 'react'
 import useAppwrite from '@/lib/useAppwrite'
@@ -11,7 +10,7 @@ import Trending from '@/components/Trending'
 import SearchInput from '@/components/SearchInput'
 import VideoCard from '@/components/VideoCard'
 
-const Home = (): JSX.Element => {
+const Home: React.FC = (): JSX.Element => {
   const { data: posts, refetch } = useAppwrite(getAllPosts)
   const { data: latestPosts } = useAppwrite(getLatestPosts)
   const { user } = useGlobalContext()
@@ -27,7 +26,7 @@ const Home = (): JSX.Element => {
   return (
     <SafeAreaView className='bg-primary h-full'>
       <FlatList
-        data={posts as any}
+        data={posts as never}
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
           <VideoCard

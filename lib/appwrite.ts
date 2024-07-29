@@ -1,13 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AppWriteConfigType } from '@/types'
+import { AppWriteConfigType, CreateVideoFormType } from '@/types'
 import {
   Account,
   Avatars,
   Client,
   Databases,
   ID,
+  ImageGravity,
   Models,
   Query,
+  Storage,
 } from 'react-native-appwrite'
 
 const config: AppWriteConfigType = {
@@ -28,6 +30,7 @@ client
   .setPlatform(config.platform)
 
 const account = new Account(client)
+const storage = new Storage(client)
 const avatars = new Avatars(client)
 const databases = new Databases(client)
 
@@ -122,11 +125,107 @@ export const signOut = async (): Promise<object> => {
   }
 }
 
+export const uploadFile = async (file: any, type: string): Promise<any> => {
+  if (!file) return
+
+  const { mimeType, ...rest } = file
+  const asset = { type: mimeType, ...rest }
+
+  try {
+    const uploadedFile = await storage.createFile(
+      config.storageId,
+      ID.unique(),
+      asset,
+    )
+
+    const fileUrl = await getFilePreview(uploadedFile.$id, type)
+    return fileUrl
+  } catch (error: any) {
+    throw new Error(error)
+  }
+}
+
+export const getFilePreview = async (
+  fileId: string,
+  type: string,
+): Promise<any> => {
+  let fileUrl
+
+  try {
+    if (type === 'video') {
+      fileUrl = storage.getFileView(config.storageId, fileId)
+    } else if (type === 'image') {
+      fileUrl = storage.getFilePreview(
+        config.storageId,
+        fileId,
+        2000,
+        2000,
+        'top' as ImageGravity,
+        100,
+      )
+    } else {
+      throw new Error('Invalid file type')
+    }
+
+    if (!fileUrl) throw Error
+
+    return fileUrl
+  } catch (error: any) {
+    throw new Error(error)
+  }
+}
+
+export const createVideoPost = async (
+  form: CreateVideoFormType,
+  userId: string,
+): Promise<Models.Document> => {
+  try {
+    const [thumbnailUrl, videoUrl] = await Promise.all([
+      uploadFile(form.thumbnail, 'image'),
+      uploadFile(form.video, 'video'),
+    ])
+
+    const newPost = await databases.createDocument(
+      config.databaseId,
+      config.videoCollectionId,
+      ID.unique(),
+      {
+        title: form.title,
+        thumbnail: thumbnailUrl,
+        video: videoUrl,
+        prompt: form.prompt,
+        creator: userId,
+      },
+    )
+
+    return newPost
+  } catch (error: any) {
+    throw new Error(error)
+  }
+}
+
 export const getAllPosts = async (): Promise<Models.Document[]> => {
   try {
     const posts = await databases.listDocuments(
       config.databaseId,
       config.videoCollectionId,
+      [Query.orderDesc('$createdAt')],
+    )
+
+    return posts.documents
+  } catch (error: any) {
+    throw new Error(error)
+  }
+}
+
+export const getUserPosts = async (
+  userId: string,
+): Promise<Models.Document[]> => {
+  try {
+    const posts = await databases.listDocuments(
+      config.databaseId,
+      config.videoCollectionId,
+      [Query.equal('creator', userId), Query.orderDesc('$createdAt')],
     )
 
     return posts.documents

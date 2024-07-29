@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ImageSourcePropType, KeyboardTypeOptions } from 'react-native'
 import { Models } from 'react-native-appwrite'
 
@@ -74,4 +75,18 @@ export type VideoCardPropsType = {
   avatar: string
   thumbnail: string
   video: string
+}
+
+export type InfoBoxPropsType = {
+  title: string | number
+  subtitle?: string
+  titleStyles?: string
+  containerStyles?: string
+}
+
+export type CreateVideoFormType = {
+  title: string
+  video: any
+  thumbnail: any
+  prompt: string
 }

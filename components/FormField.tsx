@@ -23,6 +23,7 @@ const FormField: React.FC<FormFieldPropsType> = ({
           className='flex-1 text-white font-psemibold text-base'
           value={value}
           placeholder={placeholder}
+          placeholderTextColor='#CDCDE0'
           onChangeText={handleChangeText}
           secureTextEntry={title === 'Password' && !showPassword}
           keyboardType={title === 'Email' ? keyboardType : 'default'}

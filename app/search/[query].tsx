@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect } from 'react'
 import { useLocalSearchParams } from 'expo-router'
 import { View, Text, FlatList } from 'react-native'
@@ -21,7 +20,7 @@ const Search: React.FC = (): JSX.Element => {
   return (
     <SafeAreaView className='bg-primary h-full'>
       <FlatList
-        data={posts as any}
+        data={posts as never}
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
           <VideoCard
